@@ -21,7 +21,7 @@ E-mail: samhuguet1@gmail.com
 
 (2) Double click on ```RUNME_to_log_progress```. A small GUI will appear, asking you to enter the number of minutes that you have practiced today (see image below):
 
-get the image ...........................
+<img src="https://github.com/SamHSoftware/Music-Practice-Log/blob/main/img/GUI.PNG?raw=true" alt="GUI to enter practice time" width="300"/> 
 
 Enter the number of minutes with the characters '0-9'. You may also use decimal points, but may not use non-numerical characters. If you do, the script will ask you to re-enter the value correctly. Press ```OK``` to finish.  
 
