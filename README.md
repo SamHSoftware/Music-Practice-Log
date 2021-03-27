@@ -25,6 +25,12 @@ E-mail: samhuguet1@gmail.com
 
 Enter the number of minutes with the characters '0-9'. You may also use decimal points, but may not use non-numerical characters. If you do, the script will ask you to re-enter the value correctly. Press ```OK``` to finish.  
 
+(3) A graph similar to the following will appear: 
+
+<img src="https://github.com/SamHSoftware/Music-Practice-Log/blob/main/img/Graph.PNG?raw=true" alt="A graph of the cumulative amount of practice done over time" width="500"/> 
+
+You may notice that the graph is lacking a title, and might seem like it's been cropped. If this is the case, click on the 'Configure subplots' button, then select 'Tight layout'.
+
 
 
 
