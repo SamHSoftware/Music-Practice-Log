@@ -7,7 +7,8 @@ E-mail: samhuguet1@gmail.com
 ## Description: 
 - The purpose of this collection of these functions and .bat files are to allow the user to quickly log the amount of time they have practiced their chosen skill. In my case, it's a 5 string banjo. 
 - Once practice time (in minutes) is logged, the script will produce a graph which provides an overview of the cumulative amount of practice over time. 
-- Finally, periodically run functions can check if you've recently practiced. If you haven't, Python will send you a WhatsApp message (via the Twilio service) with the aforementioned graph attached, and a predicted ETA for the completion of your goal (e.g. 2500 total hours of practice). 
+- Finally, periodically run functions can check if you've recently practiced. If you haven't, Python will send you a an e-mail with the aforementioned graph attached, and a predicted ETA for the completion of your goal (e.g. 2500 total hours of practice). 
+- I've also included code in case you want to recieve a WhatsApp message (via the Twilio service). This service requires a paid subscription, so it might not be for everybody. 
 
 ## Software requirements. 
 (1) An anaconda installation with a preprepared virtual environment containing the packages listed in ```conda_env.txt```. 
@@ -31,9 +32,11 @@ Enter the number of minutes with the characters '0-9'. You may also use decimal 
 
 You may notice that the graph is lacking a title, and might seem like it's been cropped. If this is the case, click on the 'Configure subplots' button, then select 'Tight layout'.
 
+## How to automatically assess your progress with time. 
 
+(1) ??? auto run the bat file. 
 
-
+(2) When run, the ```RUNME_to_assess_progress``` file will check to see if you have logged any practice time in the last 2 days. If you haven't, then the aforementioned e-mail will be sent to you. It's as simple as that! 
 
 
 
