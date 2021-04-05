@@ -10,6 +10,13 @@ import math
 import datetime 
 from sklearn import datasets, linear_model
 import numpy as np
+import os 
+from twilio.rest import Client
+from git import Repo
+from datetime import date, datetime
+import smtplib
+import random
+from email.message import EmailMessage
 
 ## FUNCTION PURPOSE: Allows the user to record the quantity of music practice that has been achieved for the day (in minutes). 
 # Function inputs arg 1: None. 
@@ -164,4 +171,89 @@ def plot_log_data(log_data):
     plt.title('Hi Sam.\n Given your current progress, you are\n predicted to reach your goal in ' + years_string + ' years.\n Keep up the good work!\n')
     #plt.savefig(file_directory, dpi=200, bbox_inches = "tight")
     plt.show()
+
+## FUNCTION PURPOSE: A function to WhatsApp or email the user to remind them to practice their instrument. 
+# Function input arg 1: method [string] --> 'email' or 'WhatsApp'. Determins the type of message you recieve. 
+# Function output 1: Log data is added to GitHub, and a message is sent to the user. 
+
+def message_me(method='email'):
     
+    #### (1) Determine whether the user has practiced their instrument recently. 
+    # Determine the full file path for our log data.  
+    cwd = os.getcwd()  
+    log_data_directory = cwd.replace('music-practice-log', 'log-data')
+    log_data_path = os.path.join(log_data_directory, 'log.csv')
+
+    # Determine how long it's been since our last log entry. 
+    previous_data = pd.read_csv(log_data_path) 
+    previous_data['Date (datetime object)'] = previous_data['Date (DMY)'].astype('datetime64[ns]')
+    last_entry = previous_data['Date (datetime object)'][len(previous_data)-1].to_pydatetime().date()
+    today = date.today()
+    total_days_since_last_entry = (today.day + (today.month*30) + (today.year*365)) - (last_entry.day + (last_entry.month*30) + (last_entry.year*365))
+
+    #### (2) Create a list of potential WhatsApp messages.
+    messages = [
+        "Ahoy there, Sam. You haven't been able to get some banjo in recently! Have a look at this video to get psyched: https://www.youtube.com/watch?v=-3Y7F5JJRcM",
+        "Oh,\n What's occurin,\n Play the Banjo ya noooob.",
+        "Mi amigo, this is a reminder to keep up the banjo playing and the banjo logging. The graph must grow!",
+        "You should practice because Laura says: 'I think it's really hot when you play the banjo well'. Take from that what you will.",
+        "Imagine how awesome it'll be when you can play along at folk nights on the banjo! Keep up the good work.",
+        "Hello there, banjo enthusiast! Here's a good song to get you excited for frailing again: https://www.youtube.com/watch?v=X9Rfm3_kJhM",
+        "From Laura: 'You can doeth the do Bebe! Grab that Banjo and get strumming.'",
+        "Here's the song that started it all: https://www.youtube.com/watch?v=xzt8WxXtVmM",
+        "If it's late, or you're tired, remember that clawhammer can be relaxing. Have a listen to this: https://www.youtube.com/watch?v=POZDdac7wHU&list=PLyiQRVof2bGsj2kt_irm6wMgQxoq7jmOK",
+        "You are not machines! You are not cattle! You are men! You have the love of humanity in your hearts! You don’t hate! Only the unloved hate - the unloved and the unnatural! Soldiers! Don’t fight for slavery! Fight for liberty! And play the banjo!",
+        "Keep calm and play the banjo.",
+        "When was the last time you played the banjo?\nJust for the sake of it\nAnd have you ever played the banjo just because it was a banjo and you have two good hands?\nSome people will say\n'You need sheet music'\nBut there is nothing wrong with not knowing what you are playing\nLots of people going around these day\nNot playing their instruments\nGo on any train, bus, plane\nAnd you'll see people who have stopped playing their instruments\nDon't be one of them\nYou may say\n'I've practiced this piece before' and that's ok\nBut creativity is never gone\nPractice they say is without fun\nBut I have never seen your banjo playing itself \nOn any secret corner\nYou may find the tune of your life, the sound of your soul\nThe rhythm of your day, the chord of your smile\nOr maybe not\nBut you may find something you've not heard before\nOf course, not all these practices can be magic practices that stun and amaze\nBut possible you may find a lonely piece that sings and cures\nOr even better you might find peace\nThat world that's on your computer is not the world\nThe world is the one that lies in the sounds your strings make\nAnd the smiles that they create\nThe dances, the vibes, the joys they emulate\nTell the world you are playing and it replies\nYou see I'm not sure what the secret to happiness is\nBut I'm pretty sure it starts when you play your banjo"
+    ]
+    random_message_idx = random.randint(0,len(messages))
+    
+    #### (3) Send one of the messages to the user. 
+    if total_days_since_last_entry > 1:
+
+        # Push the graph to GitHub. 
+        PATH_OF_GIT_REPO = r'C:\Users\Samuel Huguet\OneDrive\Documents\Personal\Music-Practice-Log'  # make sure .git folder is properly configured
+        COMMIT_MESSAGE = 'Updated graph and log file'
+        try:
+            repo = Repo(PATH_OF_GIT_REPO)
+            repo.git.add(update=True)
+            repo.index.commit(COMMIT_MESSAGE)
+            origin = repo.remote(name='origin')
+            origin.push()
+        except:
+            print('Some error occured while pushing the code')    
+
+        #### (3a) Send a WhatsApp message.
+        if method == 'WhatsApp'
+        
+            account_sid = os.environ.get('account_sid')
+            authorisation_token  = os.environ.get('authorisation_token')
+            client = Client(account_sid, authorisation_token)
+
+            from_whatsapp_number = 'whatsapp:'+os.environ.get('from_whatsapp_number')
+            to_whatsapp_number = 'whatsapp:'+os.environ.get('to_whatsapp_number')
+
+            client.messages.create(body = messages[random_message_idx],
+                                  MediaUrl = 'https://github.com/SamHSoftware/Music-Practice-Log/blob/main/log-data/log.png?raw=true',
+                                  from_= from_whatsapp_number,
+                                  to = to_whatsapp_number)
+            
+        #### (3b) Send an email.
+        elif method == 'email'
+        
+            # Fetch the e-mail address and passwords from the system variables. 
+            EMAIL_ADDRESS = os.environ.get('gmail_address')
+            EMAIL_PASSWORD = os.environ.get('MPL_gmail_password')
+
+            # Write the e-mail. 
+            message = EmailMessage()
+            message['Subject'] = 'Practice update'
+            message['From'] = EMAIL_ADDRESS
+            message['To'] = EMAIL_ADDRESS
+            main_content = f'{messages[random_message_idx]}\n\nHere is a link to the graph displaying your practice over time: https://github.com/SamHSoftware/Music-Practice-Log/blob/main/log-data/log.png?raw=true'
+            message.set_content(main_content)
+
+            # Define an SMTP client session object that can be used to send an email.
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+                smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+                smtp.send_message(message)
