@@ -9,4 +9,5 @@ log_data = log_progress()
 ## FUNCTION PURPOSE: A function to update the local graph, and push it to GitHub. 
 # Function input arg 1: log_data [pandas.DataFrame] --> Contains the log data.
 # Function output 1: Saves a copy of the graph to the log-data folder as 'log.png'.
-plot_log_data(log_data)
+plot_log_data(log_data,
+             your_goal_in_hours = 2500)
