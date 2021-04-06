@@ -111,10 +111,12 @@ def log_progress():
 
 ## FUNCTION PURPOSE: A function to update the local graph, and push it to GitHub. 
 # Function input arg 1: log_data [pandas.DataFrame] --> Contains the log data.
+# Function input arg 2: your_goal_in_hours [int] --> Your cumulative practice goal, in hours. 
 # Function output 1: Saves a copy of the graph to the log-data folder as 'log.png'.
 
 # Create the graph. 
-def plot_log_data(log_data):
+def plot_log_data(log_data, 
+                 your_goal_in_hours = 2500):
     
     #### (1) Prepare the data for plotting.
     # Convert the date column to a datetime object. 
@@ -137,7 +139,7 @@ def plot_log_data(log_data):
     predictions = regr.predict(x_prediction_values)
     
     # Predict how long it'll take to get to our cumulative practice target. 
-    days_till_completion = 2500/float(regr.coef_[0])
+    days_till_completion = your_goal_in_hours/float(regr.coef_[0])
     years_till_completion = days_till_completion/365
     
     # Collect the results of the linear regression model so that we can plot them. 
@@ -174,9 +176,11 @@ def plot_log_data(log_data):
 
 ## FUNCTION PURPOSE: A function to WhatsApp or email the user to remind them to practice their instrument. 
 # Function input arg 1: method [string] --> 'email' or 'WhatsApp'. Determins the type of message you recieve. 
+# Function input arg 2: time_threshold [int] --> The number of days (discrete value) without practice, after which the user will be sent an e-mail. 
 # Function output 1: Log data is added to GitHub, and a message is sent to the user. 
 
-def message_me(method='email'):
+def message_me(method='email', 
+              time_threshold = 1):
     
     #### (1) Determine whether the user has practiced their instrument recently. 
     # Determine the full file path for our log data.  
@@ -209,7 +213,7 @@ def message_me(method='email'):
     random_message_idx = random.randint(0,len(messages))
     
     #### (3) Send one of the messages to the user. 
-    if total_days_since_last_entry > 1:
+    if total_days_since_last_entry > time_threshold:
 
         # Push the graph to GitHub. 
         PATH_OF_GIT_REPO = r'C:\Users\Samuel Huguet\OneDrive\Documents\Personal\Music-Practice-Log'  # make sure .git folder is properly configured
@@ -224,7 +228,7 @@ def message_me(method='email'):
             print('Some error occured while pushing the code')    
 
         #### (3a) Send a WhatsApp message.
-        if method == 'WhatsApp'
+        if method == 'WhatsApp':
         
             account_sid = os.environ.get('account_sid')
             authorisation_token  = os.environ.get('authorisation_token')
@@ -239,7 +243,7 @@ def message_me(method='email'):
                                   to = to_whatsapp_number)
             
         #### (3b) Send an email.
-        elif method == 'email'
+        elif method == 'email':
         
             # Fetch the e-mail address and passwords from the system variables. 
             EMAIL_ADDRESS = os.environ.get('gmail_address')
