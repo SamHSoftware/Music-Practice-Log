@@ -109,24 +109,24 @@ def log_progress():
     
     return df
 
-## FUNCTION PURPOSE: A function to update the local graph, and push it to GitHub. 
+## FUNCTION PURPOSE: A function to update the local graph.
 # Function input arg 1: log_data [pandas.DataFrame] --> Contains the log data.
 # Function input arg 2: your_goal_in_hours [int] --> Your cumulative practice goal, in hours. 
 # Function output 1: Saves a copy of the graph to the log-data folder as 'log.png'.
 
 # Create the graph. 
 def plot_log_data(log_data, 
-                 your_goal_in_hours = 2500):
+                  your_goal_in_hours = 2500):
     
     #### (1) Prepare the data for plotting.
     # Convert the date column to a datetime object. 
-    log_data['Date (datetime object)'] = log_data['Date (DMY)'].astype('datetime64[ns]')
+    log_data['Date (datetime object)'] = pd.to_datetime(log_data['Date (DMY)'], format='%d/%m/%Y')
     
     # Get the start and end dates. 
     t_start = log_data['Date (datetime object)'][0]
     t_end = log_data['Date (datetime object)'][len(log_data)-1] 
     
-    # Add a column the the number of days seperating each data-point from the first log-entry. 
+    # Add a column with the number of days seperating each data-point from the first log-entry. 
     log_data['Days from start'] = [(abs(log_data['Date (datetime object)'][0] - row)).days for row in log_data['Date (datetime object)']]
 
     ### (2) Perform linear regression.
