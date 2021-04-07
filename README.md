@@ -20,13 +20,21 @@ E-mail: samhuguet1@gmail.com
 - Set ```ENVPATH``` to the path of your virtual anaconda environment. 
 - Set ```PYFUNCTION``` to the path of ```log_my_progress.py```. 
 
-(2) Double click on ```RUNME_to_log_progress.bat``` to log your progress. A small GUI will appear, asking you to enter the number of minutes that you have practiced today (see image below):
+(2) Open up (to edit) ```log_my_progress.py```. Here, you'll see the following code at the end: 
+
+```
+plot_log_data(log_data,
+             your_goal_in_hours = 2500)
+```
+You need to change last variable, ```your_goal_in_hours```, to the total number of hours you want to cumulatively achieve when practicing your chosen skill. 
+
+(3) Double click on ```RUNME_to_log_progress.bat``` to log your progress. A small GUI will appear, asking you to enter the number of minutes that you have practiced today (see image below):
 
 <img src="https://github.com/SamHSoftware/Music-Practice-Log/blob/main/img/GUI.PNG?raw=true" alt="GUI to enter practice time" width="300"/> 
 
 Enter the number of minutes with the characters '0-9'. You may also use decimal points, but may not use non-numerical characters. If you do, the script will ask you to re-enter the value correctly. Press ```OK``` to finish.  
 
-(3) A graph similar to the following will appear: 
+(4) A graph similar to the following will appear: 
 
 <img src="https://github.com/SamHSoftware/Music-Practice-Log/blob/main/img/Graph.PNG?raw=true" alt="A graph of the cumulative amount of practice done over time" width="500"/> 
 
