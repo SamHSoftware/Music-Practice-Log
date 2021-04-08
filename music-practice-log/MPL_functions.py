@@ -17,6 +17,7 @@ from datetime import date, datetime
 import smtplib
 import random
 from email.message import EmailMessage
+import imghdr
 
 ## FUNCTION PURPOSE: Allows the user to record the quantity of music practice that has been achieved for the day (in minutes). 
 # Function inputs arg 1: None. 
@@ -154,6 +155,7 @@ def plot_log_data(log_data,
     
     #### (4) Plot the graph.
     fig = plt.figure()
+    fig.patch.set_facecolor('xkcd:white')
     ax = fig.add_subplot(1, 1, 1)
     date_data = log_data['Date (datetime object)']
     practice_data = log_data['Cumulative practice time (hours)']
@@ -171,9 +173,9 @@ def plot_log_data(log_data,
     ax.xaxis.set_major_locator(plt.LinearLocator(4))
     years_string = '%.1f' % years_till_completion
     plt.title('Hi Sam.\n Given your current progress, you are\n predicted to reach your goal in ' + years_string + ' years.\n Keep up the good work!\n')
-    #plt.savefig(file_directory, dpi=200, bbox_inches = "tight")
+    plt.savefig(file_directory, dpi=200, bbox_inches = "tight")
     plt.show()
-
+    
 ## FUNCTION PURPOSE: A function to WhatsApp or email the user to remind them to practice their instrument. 
 # Function input arg 1: method [string] --> 'email' or 'WhatsApp'. Determins the type of message you recieve. 
 # Function input arg 2: time_threshold [int] --> The number of days (discrete value) without practice, after which the user will be sent an e-mail. 
@@ -190,7 +192,7 @@ def message_me(method='email',
 
     # Determine how long it's been since our last log entry. 
     previous_data = pd.read_csv(log_data_path) 
-    previous_data['Date (datetime object)'] = previous_data['Date (DMY)'].astype('datetime64[ns]')
+    previous_data['Date (datetime object)'] = pd.to_datetime(previous_data['Date (DMY)'], format='%d/%m/%Y')
     last_entry = previous_data['Date (datetime object)'][len(previous_data)-1].to_pydatetime().date()
     today = date.today()
     total_days_since_last_entry = (today.day + (today.month*30) + (today.year*365)) - (last_entry.day + (last_entry.month*30) + (last_entry.year*365))
@@ -215,20 +217,20 @@ def message_me(method='email',
     #### (3) Send one of the messages to the user. 
     if total_days_since_last_entry > time_threshold:
 
-        # Push the graph to GitHub. 
-        PATH_OF_GIT_REPO = r'C:\Users\Samuel Huguet\OneDrive\Documents\Personal\Music-Practice-Log'  # make sure .git folder is properly configured
-        COMMIT_MESSAGE = 'Updated graph and log file'
-        try:
-            repo = Repo(PATH_OF_GIT_REPO)
-            repo.git.add(update=True)
-            repo.index.commit(COMMIT_MESSAGE)
-            origin = repo.remote(name='origin')
-            origin.push()
-        except:
-            print('Some error occured while pushing the code')    
-
         #### (3a) Send a WhatsApp message.
         if method == 'WhatsApp':
+            
+            # Push the graph to GitHub. 
+            PATH_OF_GIT_REPO = r'C:\Users\Samuel Huguet\OneDrive\Documents\Personal\Music-Practice-Log'  # make sure .git folder is properly configured
+            COMMIT_MESSAGE = 'Updated graph and log file'
+            try:
+                repo = Repo(PATH_OF_GIT_REPO)
+                repo.git.add(update=True)
+                repo.index.commit(COMMIT_MESSAGE)
+                origin = repo.remote(name='origin')
+                origin.push()
+            except:
+                print('Some error occured while pushing the code')    
         
             account_sid = os.environ.get('account_sid')
             authorisation_token  = os.environ.get('authorisation_token')
@@ -254,9 +256,20 @@ def message_me(method='email',
             message['Subject'] = 'Practice update'
             message['From'] = EMAIL_ADDRESS
             message['To'] = EMAIL_ADDRESS
-            main_content = f'{messages[random_message_idx]}\n\nHere is a link to the graph displaying your practice over time: https://github.com/SamHSoftware/Music-Practice-Log/blob/main/log-data/log.png?raw=true'
+            main_content = f'{messages[random_message_idx]}\n\nHere is a the graph displaying your practice over time:'
             message.set_content(main_content)
 
+            # Include the graph within the e-mail.
+            cwd = os.getcwd()  
+            log_data_directory = cwd.replace('music-practice-log', 'log-data')
+            file_directory = os.path.join(log_data_directory, 'log.png')
+            
+            with open(file_directory, 'rb') as f: 
+                file_data = f.read() 
+                file_type = imghdr.what(f.name)
+                file_name = f.name 
+            message.add_attachment(file_data, maintype='image', subtype=file_type, filename=file_name)
+            
             # Define an SMTP client session object that can be used to send an email.
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
                 smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
