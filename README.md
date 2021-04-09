@@ -26,7 +26,7 @@ E-mail: samhuguet1@gmail.com
 plot_log_data(log_data,
              your_goal_in_hours = 2500)
 ```
-You need to change last variable, ```your_goal_in_hours```, to the total number of hours you want to cumulatively achieve when practicing your chosen skill. 
+You need to change the value of the last variable, ```your_goal_in_hours```, to the total number of hours you want to cumulatively achieve when practicing your chosen skill. 
 
 (3) Double click on ```RUNME_to_log_progress.bat``` to log your progress. A small GUI will appear, asking you to enter the number of minutes that you have practiced today (see image below):
 
@@ -41,6 +41,14 @@ Enter the number of minutes with the characters '0-9'. You may also use decimal 
 You may notice that the graph is lacking a title, and might seem like it's been cropped. If this is the case, click on the 'Configure subplots' button, then select 'Tight layout'.
 
 ## How to automatically assess your progress with time. 
+
+(1) Open (but don't yet run) ```assess_my_progress.py```. You will see the following lines of code... 
+```
+message_me(method = 'email',
+          time_threshold = 1)
+```
+
+The ```method``` variable has two options, each of which specifies the way in which you are encouraged to practice your chosen skill. 
 
 (1) ??? auto run the bat file. 
 
