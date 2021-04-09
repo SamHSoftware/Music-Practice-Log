@@ -48,7 +48,9 @@ message_me(method = 'email',
           time_threshold = 1)
 ```
 
-The ```method``` variable has two options, each of which specifies the way in which you are encouraged to practice your chosen skill. 
+The ```method``` variable has two options, each of which specifies the way in which you are encouraged to practice your chosen skill. The options are: 
+- 'email' : This means you will recieve an e-mail. 
+- 'whatsapp' : This means you will recieve a WhatsApp message, providing you have paid for the twilio service. 
 
 (1) ??? auto run the bat file. 
 
