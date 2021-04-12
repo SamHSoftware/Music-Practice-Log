@@ -10,8 +10,9 @@ E-mail: samhuguet1@gmail.com
 - Finally, you can get your PC to periodically run functions which can check if you've recently practiced. If you haven't, Python will send you an e-mail with the aforementioned graph attached, and a predicted ETA for the completion of your goal (e.g. 2500 total hours of practice). 
 - I've also included code in case you want to recieve a WhatsApp message (via the Twilio service). This service requires a paid subscription, so it might not be for everybody. 
 
-## Software requirements. 
+## Requirements. 
 (1) An anaconda installation with a preprepared virtual environment containing the packages listed in ```conda_env.txt```. 
+(2) A phone which can use WhatsApp or a gmail account. 
 
 ## How to log your time spent honing your chosen skill: 
 
@@ -44,13 +45,33 @@ You may notice that the graph is lacking a title, and might seem like it's been 
 
 (1) Open (but don't yet run) ```assess_my_progress.py```. You will see the following lines of code... 
 ```
-message_me(method = 'email',
-          time_threshold = 1)
+## FUNCTION PURPOSE: A function to WhatsApp or email the user to remind them to practice their instrument. 
+# Function input arg 1: method [string] --> 'email' or 'WhatsApp'. Determins the type of message you recieve. 
+# Function input arg 2: time_threshold [int] --> The number of days (discrete value) without practice, after which the user will be sent an e-mail. 
+# Function input arg 3: email_address [string] --> The gmail address you wish to use. 
+# Function input arg 3: email_password [string] --> The 16-digit google app password which you can create online. 
+# Function input arg 4: account_sid [string] --> The application SID if using the Twilio service. 
+# Function input arg 5: authorisation_token [string] --> The authorisation token if using the Twilio service. 
+# Function input arg 6: from_whatsapp_number [string] --> The WhatsApp number you wish to send messages from. 
+# Function input arg 7: to_whatsapp_number [string] --> The WhatsApp number you wish to send messages to. 
+# Function output 1: Log data is added to GitHub, and a message is sent to the user. 
+message_me(method='email', 
+               time_threshold = 2, 
+               email_address = os.environ.get('gmail_address'),
+               email_password = os.environ.get('MPL_gmail_password'), 
+               account_sid = os.environ.get('account_sid'),
+               authorisation_token  = os.environ.get('authorisation_token'), 
+               from_whatsapp_number = os.environ.get('from_whatsapp_number')
+               to_whatsapp_number = os.environ.get('to_whatsapp_number'))
 ```
 
-The ```method``` variable has two options, each of which specifies the way in which you are encouraged to practice your chosen skill. The options are: 
-- 'email' : This means you will recieve an e-mail. 
-- 'whatsapp' : This means you will recieve a WhatsApp message, providing you have paid for the twilio service. 
+As you can see, there are quite a few input arguments. Most of the variables are described in the code block above, but there are a couple of things to mention.
+- Some of the arguaments can be directly and easily edited (such as 'method' and 'time_threshold'), but I'd recommend adding some of the other variables (such as the passwords) to your os environemnt, so that they can be easily accessed via ```os.environ.get()```.
+- The ```method``` variable is the most important. As described above, it can be set to either 'email' or 'WhatsApp'. If you choose the 'email' option, you can leave the last four variables (those pertaining to thw WhatsApp twilio service) untouched. ```os.environ.get()``` will return an empty object, and that's fine. Alternatively, if you'd prefer to recieve a WhatsApp message, then the email variables can be left untouched. 
+- If you want to use the Twilio service, go to their website and follow their instructions to set up the service on your phone. 
+- If you want to recive emails, you need to use gmail, and set up a 16 digit app password. You can find out how to do that here: 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/JRCJ6RtE3xU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 (1) ??? auto run the bat file. 
 
