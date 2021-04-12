@@ -71,6 +71,9 @@ As you can see, there are quite a few input arguments. Most of the variables are
 - If you want to use the Twilio service, go to their website and follow their instructions to set up the service on your phone. 
 - If you want to recive emails, you need to use gmail, and set up a 16 digit app password. You can find out how to do that here: 
 
+[![A link to the youtube video](https://img.youtube.com/vi/JRCJ6RtE3xU/0.jpg)](https://www.youtube.com/embed/JRCJ6RtE3xU)
+
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/JRCJ6RtE3xU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 (1) ??? auto run the bat file. 
