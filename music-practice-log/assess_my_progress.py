@@ -1,4 +1,5 @@
 from MPL_functions import *
+import os 
 
 ## FUNCTION PURPOSE: A function to WhatsApp or email the user to remind them to practice their instrument. 
 # Function input arg 1: method [string] --> 'email' or 'WhatsApp'. Determins the type of message you recieve. 
