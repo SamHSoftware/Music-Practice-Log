@@ -69,12 +69,7 @@ As you can see, there are quite a few input arguments. Most of the variables are
 - Some of the arguaments can be directly and easily edited (such as 'method' and 'time_threshold'), but I'd recommend adding some of the other variables (such as the passwords) to your os environemnt, so that they can be easily accessed via ```os.environ.get()```.
 - The ```method``` variable is the most important. As described above, it can be set to either 'email' or 'WhatsApp'. If you choose the 'email' option, you can leave the last four variables (those pertaining to thw WhatsApp twilio service) untouched. ```os.environ.get()``` will return an empty object, and that's fine. Alternatively, if you'd prefer to recieve a WhatsApp message, then the email variables can be left untouched. 
 - If you want to use the Twilio service, go to their website and follow their instructions to set up the service on your phone. 
-- If you want to recive emails, you need to use gmail, and set up a 16 digit app password. You can find out how to do that here: 
-
-[![A link to the youtube video](https://img.youtube.com/vi/JRCJ6RtE3xU/0.jpg)](https://www.youtube.com/embed/JRCJ6RtE3xU)
-
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/JRCJ6RtE3xU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+- If you want to recive emails, you need to use gmail, and set up a 16 digit app password. You can find out how to do that [here](https://www.youtube.com/embed/JRCJ6RtE3xU): 
 
 (1) ??? auto run the bat file. 
 
