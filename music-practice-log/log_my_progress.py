@@ -10,4 +10,4 @@ log_data = log_progress()
 # Function input arg 1: log_data [pandas.DataFrame] --> Contains the log data.
 # Function output 1: Saves a copy of the graph to the log-data folder as 'log.png'.
 plot_log_data(log_data,
-             your_goal_in_hours = 2500)
+              your_goal_in_hours = 2500)
