@@ -43,7 +43,12 @@ You may notice that the graph is lacking a title, and might seem like it's been 
 
 ## How to automatically assess your progress with time. 
 
-(1) Open (but don't yet run) ```assess_my_progress.py```. You will see the following lines of code... 
+(1) First, we need to set up all the correct paths for you machine. Open your ```.bat``` file named ```RUNME_to_assess_progress```. Within this file, edit the following variables: 
+- Set ```CONDAPATH``` to your the path of your Anaconda installation. 
+- Set ```ENVPATH``` to the path of your virtual anaconda environment. 
+- Set ```PYFUNCTION``` to the path of ```assess_my_progress.py```. 
+
+(2) Open (but don't yet run) ```assess_my_progress.py```. You will see the following lines of code... 
 ```
 ## FUNCTION PURPOSE: A function to WhatsApp or email the user to remind them to practice their instrument. 
 # Function input arg 1: method [string] --> 'email' or 'WhatsApp'. Determins the type of message you recieve. 
@@ -61,7 +66,7 @@ message_me(method='email',
                email_password = os.environ.get('MPL_gmail_password'), 
                account_sid = os.environ.get('account_sid'),
                authorisation_token  = os.environ.get('authorisation_token'), 
-               from_whatsapp_number = os.environ.get('from_whatsapp_number')
+               from_whatsapp_number = os.environ.get('from_whatsapp_number'),
                to_whatsapp_number = os.environ.get('to_whatsapp_number'))
 ```
 
@@ -71,9 +76,9 @@ As you can see, there are quite a few input arguments. Most of the variables are
 - If you want to use the Twilio service, go to their website and follow their instructions to set up the service on your phone. 
 - If you want to recive emails, you need to use gmail, and set up a 16 digit app password. You can find out how to do that [here](https://www.youtube.com/embed/JRCJ6RtE3xUhttps://youtu.be/JRCJ6RtE3xU?t=45).
 
-(2) ??? auto run the bat file. 
+(3) ??? auto run the bat file. 
 
-(3) When run, the ```RUNME_to_assess_progress``` file will check to see if you have logged any practice time in the last 2 days. If you haven't, then the aforementioned e-mail/WhatsApp message will be sent to you. It's as simple as that! 
+(4) When run, the ```RUNME_to_assess_progress``` file will check to see if you have logged any practice time in the last 2 days. If you haven't, then the aforementioned e-mail/WhatsApp message will be sent to you. It's as simple as that! 
 
 
 
