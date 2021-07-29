@@ -75,10 +75,13 @@ As you can see, there are quite a few input arguments. Most of the variables are
 - The ```method``` variable is the most important. As described above, it can be set to either 'email' or 'WhatsApp'. If you choose the 'email' option, you can leave the last four variables (those pertaining to thw WhatsApp twilio service) untouched. ```os.environ.get()``` will return an empty object, and that's fine. Alternatively, if you'd prefer to recieve a WhatsApp message, then the email variables can be left untouched. 
 - If you want to use the Twilio service, go to their website and follow their instructions to set up the service on your phone. 
 - If you want to recive emails, you need to use gmail, and set up a 16 digit app password. You can find out how to do that [here](https://www.youtube.com/embed/JRCJ6RtE3xUhttps://youtu.be/JRCJ6RtE3xU?t=45).
+- The messages I've written in my code are designed for my tastes. I'd recommend optimising them for your own purposes. 
 
-(3) ??? auto run the bat file. 
+(3) Automatically run the batch file.
 
-(4) When run, the ```RUNME_to_assess_progress``` file will check to see if you have logged any practice time in the last 2 days. If you haven't, then the aforementioned e-mail/WhatsApp message will be sent to you. It's as simple as that! 
+- Automatically running you batch file will mean that every day, python will check to see if you've been practicing. This is easy to impliment, and can be achieved by following [these instructions](https://www.windowscentral.com/how-create-automated-task-using-task-scheduler-windows-10).
+
+(4) When run, the ```RUNME_to_assess_progress``` file will check to see if you have logged any practice time in the last ```time_threshold``` days. If you haven't, then the aforementioned e-mail/WhatsApp message will be sent to you. It's as simple as that! 
 
 
 
