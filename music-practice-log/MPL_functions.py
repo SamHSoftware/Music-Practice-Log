@@ -193,7 +193,7 @@ def message_me(method='email',
                email_password = os.environ.get('MPL_gmail_password'), 
                account_sid = os.environ.get('account_sid'),
                authorisation_token  = os.environ.get('authorisation_token'), 
-               from_whatsapp_number = os.environ.get('from_whatsapp_number')
+               from_whatsapp_number = os.environ.get('from_whatsapp_number'),
                to_whatsapp_number = os.environ.get('to_whatsapp_number')):
     
     #### (1) Determine whether the user has practiced their instrument recently. 
