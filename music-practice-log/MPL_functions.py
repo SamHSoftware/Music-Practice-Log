@@ -140,7 +140,7 @@ def plot_log_data(log_data,
     predictions = regr.predict(x_prediction_values)
     
     # Predict how long it'll take to get to our cumulative practice target. 
-    days_till_completion = your_goal_in_hours/float(regr.coef_[0])
+    days_till_completion = (your_goal_in_hours/float(regr.coef_[0]))-days_from_start[-1][0]
     years_till_completion = days_till_completion/365
     
     # Collect the results of the linear regression model so that we can plot them. 
@@ -172,7 +172,7 @@ def plot_log_data(log_data,
     #ax.set_xlim([datetime.date(t_start.year, t_start.month, t_start.day), datetime.date(t_end.year, t_end.month, t_end.day)])
     ax.xaxis.set_major_locator(plt.LinearLocator(4))
     years_string = '%.1f' % years_till_completion
-    plt.title('Hi Sam.\n Given your current progress, you are\n predicted to reach your goal in ' + years_string + ' years.\n Keep up the good work!\n')
+    plt.title(f"Hi Sam.\nYour goal is {str(your_goal_in_hours)} hours of practice.\nYou've practiced for {round(cumulative_practice[-1][0], 1)} hours.\nYou're predicted to reach your goal in {years_string} years.\nKeep up the good work!\n", loc='left')
     plt.savefig(file_directory, dpi=200, bbox_inches = "tight")
     plt.show()
     
