@@ -158,9 +158,7 @@ def plot_log_data(log_data,
     #### (4) Plot the panel of graphs.
     
     # Plot the practice over time graph.
-    plt.subplot2grid((1, 5), (0, 0), colspan=3)
-    fig.patch.set_facecolor('xkcd:white')
-    ax = fig.add_subplot(1, 1, 1)
+    ax = plt.subplot2grid((1, 5), (0, 0), colspan=3)
     date_data = log_data['Date (datetime object)']
     practice_data = log_data['Cumulative practice time (hours)']
     plt.plot_date(date_data, practice_data, linestyle='solid', markersize=2, linewidth=1)
@@ -185,7 +183,7 @@ def plot_log_data(log_data,
     g = sns.kdeplot(log_data['Practice time (hours)'], bw_adjust=0.2, color="blue", shade=True)
     plt.title("Kernel density estimate (KDE)\nplot of practice durations\n")
     plt.axvline(log_data['Practice time (hours)'].mean(), color='k', linestyle='dashed', linewidth=1)
-    mean_time = log_data['Practice time (hours)'].mean()*50
+    mean_time = log_data['Practice time (hours)'].mean()*60
     plt.text(log_data['Practice time (hours)'].mean()*1.1, 0.8, f'Mean: {mean_time:.1f} min')
     
     # Show and save the figure. 
