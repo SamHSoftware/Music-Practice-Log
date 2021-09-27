@@ -18,6 +18,8 @@ import smtplib
 import random
 from email.message import EmailMessage
 import imghdr
+import seaborn as sns 
+from PIL import Image 
 
 ## FUNCTION PURPOSE: Allows the user to record the quantity of music practice that has been achieved for the day (in minutes). 
 # Function inputs arg 1: None. 
@@ -153,28 +155,46 @@ def plot_log_data(log_data,
     log_data_directory = cwd.replace('music-practice-log', 'log-data')
     file_directory = os.path.join(log_data_directory, 'log.png')
     
-    #### (4) Plot the graph.
-    fig = plt.figure()
+    #### (4) Plot the panel of graphs.
+    
+    # Plot the practice over time graph.
+    plt.subplot2grid((1, 5), (0, 0), colspan=3)
     fig.patch.set_facecolor('xkcd:white')
     ax = fig.add_subplot(1, 1, 1)
     date_data = log_data['Date (datetime object)']
     practice_data = log_data['Cumulative practice time (hours)']
-    plt.plot_date(date_data, practice_data, linestyle='solid')
+    plt.plot_date(date_data, practice_data, linestyle='solid', markersize=2, linewidth=1)
     plt.plot_date(regr_date['First and last dates'],regr_date['Practice time (hours)'],'r--')
     plt.gcf().autofmt_xdate()
     date_format = mpl_dates.DateFormatter('%d-%m-%Y')
     plt.gca().xaxis.set_major_formatter(date_format)
-    plt.tight_layout()
     plt.xlabel('Date', labelpad=15)
     plt.ylabel('Cumulative practice \ntime (hours)', labelpad=10)
-    plt.rcParams.update({'font.size': 15})
+    plt.rcParams.update({'font.size': 12})
     ax.set_ylim([0, math.ceil(max(log_data['Cumulative practice time (hours)']))])
     #ax.set_xlim([datetime.date(t_start.year, t_start.month, t_start.day), datetime.date(t_end.year, t_end.month, t_end.day)])
     ax.xaxis.set_major_locator(plt.LinearLocator(4))
     years_string = '%.1f' % years_till_completion
-    plt.title(f"Hi Sam.\nYour goal is {str(your_goal_in_hours)} hours of practice.\nYou've practiced for {round(cumulative_practice[-1][0], 1)} hours.\nYou're predicted to reach your goal in {years_string} years.\nKeep up the good work!\n", loc='left')
+    plt.title(f"Hi Sam.\nYour goal is {str(your_goal_in_hours)} hours of practice.\nYou've practiced for {round(cumulative_practice[-1][0], 1)} hours.\nYou're predicted to reach your goal\nin {years_string} years.\nKeep up the good work!\n", loc='left')
+
+    # Create a KDE plot to represent the distribution of practice durations.
+    plt.subplot2grid((1, 5), (0, 3), colspan=2)
+    plt.rcParams.update({'font.size': 12})
+    plt.xlabel('Practice time (hours)', labelpad=15)
+    plt.ylabel('Density', labelpad=10)
+    g = sns.kdeplot(log_data['Practice time (hours)'], bw_adjust=0.2, color="blue", shade=True)
+    plt.title("Kernel density estimate (KDE)\nplot of practice durations\n")
+    plt.axvline(log_data['Practice time (hours)'].mean(), color='k', linestyle='dashed', linewidth=1)
+    mean_time = log_data['Practice time (hours)'].mean()*50
+    plt.text(log_data['Practice time (hours)'].mean()*1.1, 0.8, f'Mean: {mean_time:.1f} min')
+    
+    # Show and save the figure. 
+    plt.tight_layout()    
+    figure = plt.gcf()
+    figure.set_size_inches(10,10)
     plt.savefig(file_directory, dpi=200, bbox_inches = "tight")
-    plt.show()
+    img = Image.open(file_directory)
+    img.show()
     
 ## FUNCTION PURPOSE: A function to WhatsApp or email the user to remind them to practice their instrument. 
 # Function input arg 1: method [string] --> 'email' or 'WhatsApp'. Determins the type of message you recieve. 
