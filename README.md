@@ -12,7 +12,7 @@ E-mail: samhuguet1@gmail.com
 
 ## Requirements. 
 (1) An anaconda installation with a preprepared virtual environment containing the packages listed in ```conda_env.txt```. 
-(2) A phone which can use WhatsApp or a gmail account. 
+(2) A phone or computer which can use WhatsApp or a gmail account. 
 
 ## How to log your time spent honing your chosen skill: 
 
@@ -35,11 +35,11 @@ You need to change the value of the last variable, ```your_goal_in_hours```, to 
 
 Enter the number of minutes with the characters '0-9'. You may also use decimal points, but may not use non-numerical characters. If you do, the script will ask you to re-enter the value correctly. Press ```OK``` to finish.  
 
-(4) A graph similar to the following will appear: 
+(4) A graph similar to the following will be saved to the log-data folder: 
 
 <img src="https://github.com/SamHSoftware/Music-Practice-Log/blob/main/img/Graph.PNG?raw=true" alt="A graph of the cumulative amount of practice done over time" width="500"/> 
 
-You may notice that the graph is lacking a title, and might seem like it's been cropped. If this is the case, click on the 'Configure subplots' button, then select 'Tight layout'.
+The code will automatically open this image. To maximize the image, have a look at your taskbar, and click the relevant image icon.
 
 ## How to automatically assess your progress with time. 
 
