@@ -14,6 +14,9 @@ E-mail: samhuguet1@gmail.com
 * img: 
   * This is where images are stored. These images are used to illustrate this README document.
 * log-data:
+  * This contains an example of the```log.csv``` file, which contains the practice data. 
+  * This also contains an example of the ```log.png``` file, which is always outputted to the log folder. 
+* music-practice-log:
   * This is where the main code is stored.
   * There are module files (these contain the individual functions) and RUNME files (these actually call (use) the functions).
   * There are .py files for general purpose IDEs, and .ipynb files for JupyterLab.
