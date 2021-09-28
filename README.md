@@ -10,6 +10,20 @@ E-mail: samhuguet1@gmail.com
 - Finally, you can get your PC to periodically run functions which can check if you've recently practiced. If you haven't, Python will send you an e-mail with the aforementioned graph attached, and a predicted ETA for the completion of your goal (e.g. 2500 total hours of practice). 
 - I've also included code in case you want to recieve a WhatsApp message (via the Twilio service). This service requires a paid subscription, so it might not be for everybody. 
 
+## Repositry architecture:
+* img: 
+  * This is where images are stored. These images are used to illustrate this README document.
+* log-data:
+  * This is where the main code is stored.
+  * There are module files (these contain the individual functions) and RUNME files (these actually call (use) the functions).
+  * There are .py files for general purpose IDEs, and .ipynb files for JupyterLab.
+* .gitignore: 
+  * I use software called 'Git Bash' to sync my local files with those within this GitHub repositry. The .gitignore file contains a list of directories (e.g. text files with project notes), and prevents Git Bash from uplodaing them; I don't want to clutter up this repo!
+* LICENCE.txt: 
+  * The licence explaining how this code can be used.
+* README.md: 
+  * The file which creates the README for this code.  
+  
 ## Requirements. 
 (1) An anaconda installation with a preprepared virtual environment containing the packages listed in ```conda_env.txt```. 
 (2) A phone or computer which can use WhatsApp or a gmail account. 
