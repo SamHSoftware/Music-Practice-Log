@@ -155,44 +155,141 @@ def plot_log_data(log_data,
     log_data_directory = cwd.replace('music-practice-log', 'log-data')
     file_directory = os.path.join(log_data_directory, 'log.png')
     
-    #### (4) Plot the panel of graphs.
-    
-    # Plot the practice over time graph.
-    ax = plt.subplot2grid((1, 5), (0, 0), colspan=3)
-    date_data = log_data['Date (datetime object)']
-    practice_data = log_data['Cumulative practice time (hours)']
-    plt.plot_date(date_data, practice_data, linestyle='solid', markersize=2, linewidth=1)
-    plt.plot_date(regr_date['First and last dates'],regr_date['Practice time (hours)'],'r--')
-    plt.gcf().autofmt_xdate()
-    date_format = mpl_dates.DateFormatter('%d-%m-%Y')
-    plt.gca().xaxis.set_major_formatter(date_format)
-    plt.xlabel('Date', labelpad=15)
-    plt.ylabel('Cumulative practice \ntime (hours)', labelpad=10)
-    plt.rcParams.update({'font.size': 12})
-    ax.set_ylim([0, math.ceil(max(log_data['Cumulative practice time (hours)']))])
-    #ax.set_xlim([datetime.date(t_start.year, t_start.month, t_start.day), datetime.date(t_end.year, t_end.month, t_end.day)])
-    ax.xaxis.set_major_locator(plt.LinearLocator(4))
-    years_string = '%.1f' % years_till_completion
-    plt.title(f"Hi Sam.\nYour goal is {str(your_goal_in_hours)} hours of practice.\nYou've practiced for {round(cumulative_practice[-1][0], 1)} hours.\nYou're predicted to reach your goal\nin {years_string} years.\nKeep up the good work!\n", loc='left')
+    #### (4a) Plot the panel of graphs... if you've practiced for a month (31 days) or less.
+    if log_data['Days from start'][len(log_data)-1] <= 31:
+        
+        # Plot the practice over time graph.
+        ax = plt.subplot2grid((1, 5), (0, 0), colspan=3)
+        date_data = log_data['Date (datetime object)']
+        practice_data = log_data['Cumulative practice time (hours)']
+        plt.plot_date(date_data, practice_data, linestyle='solid', markersize=2, linewidth=1)
+        plt.plot_date(regr_date['First and last dates'],regr_date['Practice time (hours)'],'r--')
+        plt.setp(plt.xticks()[1], rotation=30, ha='right')
+        plt.xlabel('Date', labelpad=15)
+        plt.ylabel('Cumulative practice \ntime (hours)', labelpad=10)
+        plt.rcParams.update({'font.size': 12})
+        ax.set_ylim([0, math.ceil(max(log_data['Cumulative practice time (hours)']))])
+        #ax.set_xlim([datetime.date(t_start.year, t_start.month, t_start.day), datetime.date(t_end.year, t_end.month, t_end.day)])
+        ax.xaxis.set_major_locator(plt.LinearLocator(4))
+        years_string = '%.1f' % years_till_completion
+        plt.title(f"Hi Sam.\nYour goal is {str(your_goal_in_hours)} hours of practice.\nYou've practiced for {round(cumulative_practice[-1][0], 1)} hours.\nYou're predicted to reach your goal\nin {years_string} years.\nKeep up the good work!\n", loc='left')
 
-    # Create a KDE plot to represent the distribution of practice durations.
-    plt.subplot2grid((1, 5), (0, 3), colspan=2)
-    plt.rcParams.update({'font.size': 12})
-    plt.xlabel('Practice time (hours)', labelpad=15)
-    plt.ylabel('Density', labelpad=10)
-    g = sns.kdeplot(log_data['Practice time (hours)'], bw_adjust=0.2, color="blue", shade=True)
-    plt.title("Kernel density estimate (KDE)\nplot of practice durations\n")
-    plt.axvline(log_data['Practice time (hours)'].mean(), color='k', linestyle='dashed', linewidth=1)
-    mean_time = log_data['Practice time (hours)'].mean()*60
-    plt.text(log_data['Practice time (hours)'].mean()*1.1, 0.8, f'Mean: {mean_time:.1f} min')
-    
-    # Show and save the figure. 
-    plt.tight_layout()    
-    figure = plt.gcf()
-    figure.set_size_inches(10,10)
-    plt.savefig(file_directory, dpi=200, bbox_inches = "tight")
-    img = Image.open(file_directory)
-    img.show()
+        # Create a KDE plot to represent the distribution of practice durations.
+        plt.subplot2grid((1, 5), (0, 3), colspan=2)
+        plt.rcParams.update({'font.size': 12})
+        plt.xlabel('Practice time (hours)', labelpad=15)
+        plt.ylabel('Density', labelpad=10)
+        g = sns.kdeplot(log_data['Practice time (hours)'], bw_adjust=0.2, color="blue", shade=True)
+        plt.title("Kernel density estimate (KDE)\nplot of practice durations\n")
+        plt.axvline(log_data['Practice time (hours)'].mean(), color='k', linestyle='dashed', linewidth=1)
+        mean_time = log_data['Practice time (hours)'].mean()*60
+        plt.text(log_data['Practice time (hours)'].mean()*1.1, 0.8, f'Mean: {mean_time:.1f} min')
+
+        # Show and save the figure. 
+        plt.tight_layout()    
+        figure = plt.gcf()
+        figure.set_size_inches(10,10)
+        plt.savefig(file_directory, dpi=200, bbox_inches = "tight")
+        img = Image.open(file_directory)
+        img.show()
+        
+    #### (4b) Plot the panel of graphs... if you've practiced for more than a month (31 days).
+    if log_data['Days from start'][len(log_data)-1] > 31:
+
+        # Get the row index representing the threshold after which we should include data. 
+        minimum = min(i for i in (days_from_start - 31) if i >= 0)[0]
+        idx = np.where((days_from_start - 31) == minimum)[0][0]
+         
+        # NOTE: The following variables are similar to those which were previously created.
+        # To differentiate some of them, I will add '_31'.
+
+        # Perform linear regression for the last month.
+        log_data_31 = log_data[idx:len(log_data)]
+        regr_31 = linear_model.LinearRegression(fit_intercept=True)
+        days_within_last_month = log_data_31['Days from start'].to_numpy().reshape(-1, 1)
+        cumulative_practice_last_month = log_data_31['Cumulative practice time (hours)'].to_numpy().reshape(-1, 1)
+        regr_31.fit(days_within_last_month, cumulative_practice_last_month)
+        x_prediction_values_last_month = log_data_31['Days from start'].iloc[[0, -1]].to_numpy().reshape(-1, 1)
+        predictions_last_month = regr_31.predict(x_prediction_values_last_month)
+
+        # Predict how long it'll take to get to our cumulative practice target given the last month of data.
+        days_till_completion_31 = (your_goal_in_hours/float(regr_31.coef_[0]))-days_from_start[-1][0]        
+        years_till_completion_31 = days_till_completion_31/365
+
+        # Collect the results of the linear regression model so that we can plot them. 
+        regr_31_date_1 = pd.DataFrame()
+        regr_31_date_1['First and last dates'] = log_data['Date (datetime object)'].iloc[[0,-1]]
+        regr_31_date_1['Practice time (hours)'] = regr_31.predict(log_data['Days from start'].iloc[[0,-1]].to_numpy().reshape(-1, 1))
+        
+        regr_31_date_2 = pd.DataFrame()
+        regr_31_date_2['First and last dates'] = log_data_31['Date (datetime object)'].iloc[[0,-1]]
+        regr_31_date_2['Practice time (hours)'] = predictions_last_month
+   
+        # Plot the practice over time graph FOR ENTIRE DATA RANGE.
+        ax = plt.subplot2grid((2, 5), (0, 0), colspan=3)
+        date_data = log_data['Date (datetime object)']
+        practice_data = log_data['Cumulative practice time (hours)']
+        plt.plot_date(regr_date['First and last dates'],regr_date['Practice time (hours)'],'r--', linewidth=0.8, label ='LOBF: All data')
+        plt.plot_date(regr_31_date_1['First and last dates'],regr_31_date_1['Practice time (hours)'],'b--', linewidth=0.8, label ="LOBF: Last month's data")
+        plt.plot_date(date_data, practice_data, linestyle='solid', markersize=2, linewidth=1, label ='Cumulative practice')
+        plt.legend(loc="upper left")
+        plt.setp(plt.xticks()[1], rotation=30, ha='right')
+        plt.xlabel('Date', labelpad=15)
+        plt.ylabel('Cumulative practice \ntime (hours)', labelpad=10)
+        plt.rcParams.update({'font.size': 12})
+        ax.set_ylim([0, math.ceil(max(log_data['Cumulative practice time (hours)']))])
+        #ax.set_xlim([datetime.date(t_start.year, t_start.month, t_start.day), datetime.date(t_end.year, t_end.month, t_end.day)])
+        ax.xaxis.set_major_locator(plt.LinearLocator(4))
+        years_string = '%.1f' % years_till_completion
+        plt.title(f"Hi Sam.\nYour goal is {str(your_goal_in_hours)} hours of practice.\nYou've practiced for {round(cumulative_practice[-1][0], 1)} hours.\nYou're predicted to reach your goal\nin {years_string} years.\nKeep up the good work!\n", loc='left')
+        
+        # Create a KDE plot to represent the distribution of practice durations FOR ENTIRE DATA RANGE.
+        plt.subplot2grid((2, 5), (0, 3), colspan=2)
+        plt.rcParams.update({'font.size': 12})
+        plt.xlabel('Practice time (hours)', labelpad=15)
+        plt.ylabel('Density', labelpad=10)
+        g = sns.kdeplot(log_data['Practice time (hours)'], bw_adjust=0.2, color="blue", shade=True)
+        plt.title("Kernel density estimate (KDE)\nplot of practice durations\n")
+        plt.axvline(log_data['Practice time (hours)'].mean(), color='k', linestyle='dashed', linewidth=1)
+        mean_time = log_data['Practice time (hours)'].mean()*60
+        plt.text(log_data['Practice time (hours)'].mean()*1.1, 0.8, f'Mean: {mean_time:.1f} min')
+        
+        # Plot the practice over time graph FOR LAST MONTH OF DATA.
+        ax = plt.subplot2grid((2, 5), (1, 0), colspan=3)
+        date_data_31 = log_data_31['Date (datetime object)']
+        practice_data_31 = log_data_31['Cumulative practice time (hours)']
+        plt.plot_date(regr_31_date_2['First and last dates'],regr_31_date_2['Practice time (hours)'],'b--', linewidth=0.8, label="LOBF: Last month's data")
+        plt.plot_date(date_data_31, practice_data_31, linestyle='solid', markersize=2, linewidth=1, label='Last month of cumulative\npractice')
+        plt.legend(loc="upper left")
+        plt.setp(plt.xticks()[1], rotation=30, ha='right')
+        plt.xlabel('Date', labelpad=15)
+        plt.ylabel('Cumulative practice \ntime (hours)', labelpad=10)
+        plt.rcParams.update({'font.size': 12})
+        ax.set_ylim([math.floor(min(log_data_31['Cumulative practice time (hours)'])), math.ceil(max(log_data_31['Cumulative practice time (hours)']))])
+        #ax.set_xlim([datetime.date(t_start.year, t_start.month, t_start.day), datetime.date(t_end.year, t_end.month, t_end.day)])
+        ax.xaxis.set_major_locator(plt.LinearLocator(4))
+        years_string = '%.1f' % years_till_completion_31
+        plt.title(f"This graph shows your efforts\nover the last month. If you\nmaintain these efforts, you're\npredicted to reach your goal\nin {years_string} years.\n", loc='left')
+        
+        # Create a KDE plot to represent the distribution of practice durations FOR LAST MONTH OF DATA.
+        plt.subplot2grid((2, 5), (1, 3), colspan=2)
+        plt.rcParams.update({'font.size': 12})
+        plt.xlabel('Practice time (hours)', labelpad=15)
+        plt.ylabel('Density', labelpad=10)
+        g = sns.kdeplot(log_data_31['Practice time (hours)'], bw_adjust=0.3, color="blue", shade=True)
+        plt.title("KDE plot of practice\ndurations over the\nlast month\n")
+        plt.axvline(log_data_31['Practice time (hours)'].mean(), color='k', linestyle='dashed', linewidth=1)
+        mean_time = log_data_31['Practice time (hours)'].mean()*60
+        plt.text(log_data_31['Practice time (hours)'].mean()*1.1, 0.8, f'Mean: {mean_time:.1f} min')
+
+        # Show and save the figure. 
+        #plt.tight_layout() 
+        plt.subplots_adjust(hspace=1.2, wspace=1.0)
+        figure = plt.gcf()
+        figure.set_size_inches(10, 10) # width, height
+        plt.savefig(file_directory, dpi=200, bbox_inches = "tight")
+        img = Image.open(file_directory)
+        img.show()
     
 ## FUNCTION PURPOSE: A function to WhatsApp or email the user to remind them to practice their instrument. 
 # Function input arg 1: method [string] --> 'email' or 'WhatsApp'. Determins the type of message you recieve. 
