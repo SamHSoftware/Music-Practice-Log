@@ -51,14 +51,29 @@ def log_progress():
             b.pack()
             root.mainloop()
 
-    #### (2) Use the GUI.
-    instance_GUI = GUI("Please enter the number of minutes practiced.")
-    minutes_practiced_today = instance_GUI.response
-    
-    # If there was an accidental text entry, notify the user, and ask for a numerical input. 
-    while bool(re.search('[^0-9^.]', minutes_practiced_today)) is True or minutes_practiced_today.count('.') > 1: 
-        instance_GUI = GUI("Re-enter answer using only numbers 0-9 and one decimal point.")
+    #### (2) Create and call a function to use the GUI, and catch any user errors. 
+    def use_GUI(message = "Please enter the number of minutes practiced."):
+        instance_GUI = GUI(message)
         minutes_practiced_today = instance_GUI.response
+        
+        # Looks for accidental text entries, or emtpy entries.
+        letters_in_answer = bool(re.search('[^0-9^.]', minutes_practiced_today))
+        no_answer_given = True if len(minutes_practiced_today) == 0 else False
+        
+        # If the answer is OK. 
+        if letters_in_answer == False and no_answer_given == False:
+            print('case 1')
+            return instance_GUI.response
+        # If the answer contains alphabetical letters. 
+        elif letters_in_answer == True and no_answer_given == False:
+            print('case 2')
+            return use_GUI("Re-enter answer using only numbers 0-9 and one decimal point.")
+        # If the answer contains to no characters. 
+        elif letters_in_answer == False and no_answer_given == True:
+            print('case 3')
+            return use_GUI("Oops, you forgot to enter a number!\nPlease re-enter your value, then press 'OK'")
+    
+    minutes_practiced_today = use_GUI(message = "Please enter the number of minutes practiced.")
     hours_practiced_today = float(minutes_practiced_today)/60
     
     #### (4) Determine the full file path for our log data.  
